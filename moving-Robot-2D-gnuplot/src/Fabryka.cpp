@@ -1,0 +1,4 @@
+#include "Fabryka.hh"
+
+;
+

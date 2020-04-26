@@ -1,0 +1,11 @@
+Mateusz Teśluk,15.01.2017r.,Kalkulator RPN.
+1. Wpisanie przykladowej kombinacji: 2 3 4 5 + + - , spodziewany wynik to -10. Wynik testu pozytywny.
+2. Sprawdzenie czy dzialanie (2+4*5)/(1+7) da takie sam wynik jak zapis w kalkulatorze 2 4 5 * + 1 7 + /. Wynik poprawny. 
+3. Sprawdzenie poprawnosci dzialan dla kazdej opcji matematycznej. Wynik pozytywny.
+4. Po paru obliczeniach sprawdzenie czy '?' wyswietli wszystkie liczby na stosie. Wynik pozytywny.
+5. Sprawdzenie czy '$' zduplikuje wartosci poczatkowe. Poprawne.
+6. Czy '&' zrobi zamiane kolejnoscia dwoch gornych elementow. Poprawny wynik, w przypadku zera lub jednego elementu wypisze komunikat informujacy o tym.
+7. Sprawdzenie czy '#' usunie pierwszy element. Test poprawny.
+8. Sprawdzenie poprawnosci drugiego stosu i opcji zwiazanych z nim czyli zapis do niego 'z', usuwanie z niego i wczytaniu do podstawowego stosu 'w' i wyswietlenie elementow tego stosu 'a'. Wynik poprawny.
+9. Czy 'c' wyczysci ekran obliczeniowy? Wynik poprawny.
+10. Sprawdzenie czy 'q' zakonczy dzialanie programu. Prawada.

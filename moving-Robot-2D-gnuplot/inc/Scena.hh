@@ -1,0 +1,149 @@
+#ifndef SCENA_HH
+#define SCENA_HH
+
+/*!
+ * \file
+ * \brief Definicja klasy scena
+ *
+ * 
+ *  
+ * 
+ */
+
+#include <memory>
+#include <vector>
+#include <list>
+#include <fstream>
+#include "Wektor2D.hh"
+#include "Macierz2x2.hh"
+#include "Przeszkoda.hh"
+#include "Robot.hh"
+
+typedef shared_ptr <ObiektGraf> PTR;
+typedef shared_ptr <Robot> ROB;
+
+enum TypObiektu {OG_Robot, OG_Przeszkoda };
+
+class Fabryka{
+  static Fabryka   _Fabryka;
+  
+public:
+static PTR Zbuduj( TypObiektu  TypOb,float a,float b,float p)
+{return _Fabryka.UtworzObiekt(TypOb,a,b,p);}  
+
+private:
+  PTR UtworzObiekt( TypObiektu  TypOb,float a,float b,float p)const {
+      switch (TypOb) {
+      case OG_Robot: {return make_shared<Robot>(a,b);}break;
+      case OG_Przeszkoda: {return make_shared<Przeszkoda>(a,b,p);}break;
+      }
+      return make_shared<Przeszkoda>(a,b,p);
+    }
+
+};
+
+
+
+/*!
+ * \brief Klasa Scena
+ *
+ * Klasa zawiera zbior wszystkich obiektow
+ * graficznych Przeszkody,robota,sciezki 
+ */
+class Scena{
+  
+  /*!
+   *\brief Zmienna Typ
+   *
+   *Rozpoznaje ktorym robotem trzeba 
+   *operowac
+   */
+  int typ;
+
+  /*!
+   *\brief Tablica wskaznikow
+   *
+   * Tablica inteligentych wskaznikow 
+   * alokowanych dynamicznie, wskazniki 
+   * na ObiektGraf, potem nastepuje
+   * rzutowanie w gore
+   */
+  list <PTR> obiekt;
+  vector <ROB> roboty;
+public:
+
+  /*!
+   *\brief Konstruktor
+   *
+   * Konstruktor do Sceny
+   * wrzuca na stos wskazniki 
+   * na rozne obiekty
+   */
+  Scena();
+
+  /*!
+   *\brief Metoda do wys
+   *
+   * Wyswietla wspolrzedne robotow
+   * zeby potem je wybrac
+   */
+  void WyswietlWspRobotow();
+
+  /*!
+   *\brief Metoda do wyboru
+   *
+   * Za pomoca tej metody wybieramy
+   * robota ktorym chcemy sterowac
+   */
+  void WyborRobota(int i);
+  
+  /*!
+ * \brief Kolizja robota
+ *
+ * Kolizja robota z przeszkodami i 
+ * innymi robotami, zwraca true jesli
+ * nastapila kolizja i dodaje +1 do 
+ * statystyk kolizyjnych
+ */
+  bool KolizjaRobota();
+
+void ZbudujRobota(TypObiektu  TypOb,float a,float b,float p);
+
+
+  /*!
+ * \brief Ruch Robota
+ *
+ * Sprawia ze robot moze sie poruszac
+ */
+  void RuchRobota(float ile);
+
+  /*!
+ * \brief Obrot robota
+ *
+ * Obraca robota
+ */
+  void ObrotRobota(Macierz2x2 Ma,float alfa);
+  
+/*!
+ * \brief Translacja sceny 
+ *
+ * Przesuwa cala scene w konkretne 
+ * miejsce zalezne od podanego wektora
+ */
+  void Translacja(Wektor2D We);
+
+  void AktualnyRobot();
+
+  
+/*!
+ * \brief Zapis do pliku
+ *
+ * Funkcja zapisuje wszystkie potrzebne 
+ * wspolrzedne do pliku aby potem umozliwic
+ * wyswietlenie tego w gnuplocie
+ */
+  bool PrzykladZapisuWspolrzednychDoPliku( const char  *sNazwaPliku);
+  };
+
+
+#endif

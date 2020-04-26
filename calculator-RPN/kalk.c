@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include "funkcje.h"
+
+/*********************************************************/
+/*                    DOKUMENTACJA                       */
+/*             Autor: Mateusz Tesluk                     */
+/*             Data utworzenia: 14.01.2017r.             */
+/*             Wersja: finalna                           */
+/* Program ponizej jest rodzajem kalkulatora. Nie jest   */
+/* to bynajmniej klasyczny kalkulator. Ten opiera sie na */
+/* odwrotnej notacji polskiej. Dane wejsciowe wpisuje    */
+/* wpisuje sie w jednej lini, a znaki majace oznaczac    */
+/* wykonywana akcje wpisuje sie na samym koncu.          */
+/* Np.: 2 3 5 + + program najpierw doda 5 i 3, a potem   */
+/* do wyniku jeszcze doda 2. Kalkulator opiera sie na    */
+/* stosie (dynamiczej liscie jednokierunkowej). Mozliwe  */
+/* dzialania sa dla dodawania '+', odejmowania '-',      */
+/* pierwiastkowanie '@', potegowania '^',                */
+/* mnozenia '*', dzielenia '/', zakonczeniu programu 'q',*/
+/* zapamietanie wartosci 'z', wczytanie wartosci 'w',    */
+/* usuniecia elementu na stosie '#', wyswietleniu        */
+/* wszystkich elementow stosu '?', zduplikowaniu         */
+/* szczytowej wartosci '&' oraz zamianie dwoch           */
+/* szczytowych wartosci kolejnoscia '$', wyswietlenie    */
+/* zapisanych liczb 'a', wyczyszczenie ekranu 'c'.       */
+/*********************************************************/             
+
+int main(){
+  int liczba,x,y,wynik; /*pomocnicze*/
+  int duplikat;
+  int oper;
+  int i=0,j=0;
+  int dodatnia;
+  char tab[100];
+
+t_elem *lista,*saved;
+inicjuj(&lista);
+inicjuj(&saved);
+
+system("clear");
+
+printf("Podstawowe dzialania matematyczne:\n");
+printf("+  Dodawanie\n");
+printf("-  Odejmowanie\n");
+printf("*  Mnozenie\n");
+printf("/  Dzielenie\n");
+printf("@  Pierwiastkowanie\n");
+printf("^  Potegowanie\n");
+printf("Oraz inne pomocne opcje:\n");
+printf("#  Usuniecie szczytowej wartosci\n");
+printf("&  Zamiana dwoch szczytowych wartosci kolejnoscia\n");
+printf("$  Duplikacja szczytowej wartosci\n");
+printf("?  Wyswietlenie wszystkich wartosci na stosie\n");
+printf("z  Zapamietanie wartosci\n");
+printf("w  Wczytanie tej wartosci\n");
+printf("a  Wyswietlenie zapisanych liczb\n");
+printf("c  Czysci ekran\n");
+printf("q  Koniec programu\n\n");
+
+while(oper != 'q'){
+ oper=getchar();
+ if(isdigit(oper)||oper=='-'){
+   if(oper=='-')
+     {
+       if((liczba=getchar())==' ' || liczba=='\n'){ /*po minusie nic nie ma*/
+          if(empty(&lista)<2){
+             fprintf(stderr,"Za malo liczb na stosie!\n");
+             break;}
+          pop(&lista,&x);
+          pop(&lista,&y);
+          wynik=y-x; /*odejmowanie*/
+          printf("Wynik: %d\n", wynik);
+          push(&lista,wynik);}
+
+       ungetc(liczba,stdin);/*zwraca znak liczba z powrotem*/
+
+       if(isdigit(oper=getchar())){/*PRZYPADEK LICZBY UJEMNEJ*/
+           i=0;
+           tab[i++]=oper;
+           while(isdigit(tab[i++]=oper=getchar()));
+           tab[i]='\0';
+           dodatnia=atoi(tab);
+           wynik=0-dodatnia;
+           push(&lista,wynik);}}
+    else{ /*PRZYPADEK LICZBY DODATNIEJ*/
+           i=0;
+           tab[i++]=oper;
+           while(isdigit(tab[i++]=oper=getchar()));
+           tab[i]='\0';
+           dodatnia=atoi(tab);
+           push(&lista,dodatnia);}}
+   switch(oper){
+   case '+': {       /*dodawanie*/
+	if (empty(&lista)<2){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	pop(&lista,&y);
+	wynik=x+y;
+	printf("Wynik: %d\n", wynik);
+	push(&lista,wynik);
+		
+	}
+	break;
+   case '*': {      /*mnozenie*/
+	if (empty(&lista)<2){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	pop(&lista,&y);
+	wynik=x*y;
+	printf("Wynik: %d\n", wynik);
+	push(&lista,wynik);	
+	}
+	break;
+   case '/': {        /*dzielenie*/
+	if (empty(&lista)<2){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	pop(&lista,&y);
+	if(x==0){
+	   fprintf(stderr,"Blad: Nie mozna dzielic przez 0\n");
+	   break;}
+	wynik=y/x;
+	printf("Wynik: %d\n", wynik);
+	push(&lista,wynik);	
+	}
+	break;
+   case '^': {          /*potegowanie*/
+	if (empty(&lista)<2){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	pop(&lista,&y);
+	wynik=pow(y,x);
+	printf("Wynik: %d\n", wynik);
+	push(&lista,wynik);}
+	break;
+   case '@': {        /*pierwiastkowanie drugiego stopnia*/
+	if (empty(&lista)<1){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	if(x<0){
+	   fprintf(stderr,"Blad: Nie mozna pierwiastkowac liczby mniejszej niz 0\n");
+	   break;}
+	wynik=sqrt(x);
+	printf("Wynik: %d\n", wynik);
+	push(&lista,wynik);
+	}
+	break;
+   case '#':{                    /*usuwanie elem szczytowego*/
+	if (empty(&lista)<1){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	printf("Usuniety wyraz to: %d\n",x);
+	}
+	break;
+   case '$':{                  /*zamiana szczytowych wartosci*/
+	if (empty(&lista)<2){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	pop(&lista,&y);
+	push(&lista,x); 
+	push(&lista,y);
+	printf("Bylo %d na gorze, teraz jest %d\n",x,y); 	
+	}
+	break;
+   case '&':{                /*duplikowanie szczytowej wartosci*/
+	if (empty(&lista)<1){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	duplikat=x;
+	push(&lista,x); 
+	push(&lista,duplikat);
+	printf("Zduplikowany wyraz to: %d\n",duplikat); 	
+	}
+	break;
+    case '?':{                  /*wyswietlanie wartosci stosu*/
+	if (empty(&lista)<1){
+              fprintf(stderr,"Brak elementow na stosie\n");
+              break;}
+	 printf("Wszystkie elementy stosu: ");
+	 print(&lista);
+	}
+	break;	
+    case 'z':{                  /*zapis wyrazu do pamieci*/
+	if (empty(&lista)<1){
+              fprintf(stderr,"Blad: Za malo elementow na stosie\n");
+              break;}
+	pop(&lista,&x);
+	push(&saved,x);
+	push(&lista,x);
+	printf("Zapamietany wyraz to: %d\n",x);	
+	}
+	break;
+    case 'w':{                  /*wczytanie zapamietanego wyrazu*/
+	if (empty(&saved)<1){
+              fprintf(stderr,"Nie ma nic do wczytania\n");
+              break;}
+	pop(&saved,&x);
+	push(&lista,x);
+	printf("Wczytany wyraz to: %d\n",x);	
+	}
+	break;
+    case 'a':{                  /*wczytanie zapamietanego wyrazu*/
+	if (empty(&saved)<1){
+              fprintf(stderr,"Nie ma nic do wczytania\n");
+              break;}
+	printf("Zapisane liczby: ");
+	print(&saved);
+	}
+	break;
+    case 'c':{                  /*czysci ekran*/
+	system("clear");
+	printf("Podstawowe dzialania matematyczne:\n");
+printf("+  Dodawanie\n");
+printf("-  Odejmowanie\n");
+printf("*  Mnozenie\n");
+printf("/  Dzielenie\n");
+printf("@  Pierwiastkowanie\n");
+printf("^  Potegowanie\n");
+printf("Oraz inne pomocne opcje:\n");
+printf("#  Usuniecie szczytowej wartosci\n");
+printf("&  Zamiana dwoch szczytowych wartosci kolejnoscia\n");
+printf("$  Duplikacja szczytowej wartosci\n");
+printf("?  Wyswietlenie wszystkich wartosci na stosie\n");
+printf("z  Zapamietanie wartosci\n");
+printf("w  Wczytanie tej wartosci\n");
+printf("a  Wyswietlenie zapisanych liczb\n");
+printf("c  Czysci ekran\n");
+printf("q  Koniec programu\n\n");
+	
+	}
+	break;
+    }}
+system("clear");
+printf("!!!!!!!!KONIEC PROGRAMU!!!!!!!!\n");
+}
+
+
+
+
+
+
+
+
+

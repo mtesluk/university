@@ -1,0 +1,9 @@
+Mateusz Teśluk, przetwarzanie obrazow 2, 20.12.2016r.
+Test:
+1. Sprawdzenie czy wczytany plik zarowno .pgm jak i .ppm sie wyswietla. Wynik pozytywny.
+2. Po wczytaniu pliku PGM sprawdzenie czy kazda edycja obrazu dziala poprawnie,nastepnie zapisanie i wyswietlnie pliku. Wynik pozytywny.
+3. Po wczytaniue pliku PPM uzycie konwersji na szarosc i sprawdzenie czy wszystko działa. Wynik pozytywny obraz zostal zapisany jako .pgm i jest szary.
+4. Przy wywolywaniu programu z konsoli wpisanie np.: ./a.out -w kubus.pgm - n -z neg.pgm -d i sprawdzenie czy dziala wczytanie, negatyw i zapisz i wyswietll. Wynik pozytywny - zostalo to rowniez sprawdzone dla kazdej innej edycji.  
+5. Wczytanie z konsoli pliku .ppm i przekonwersowanie go. Wszystko zadzialalo prawidlowo.
+
+W przypadku rozmycia poziomego nie wszystko działa prawididłowo.Obraz sie wyswietla ale gorna czesc jest niepoprawna.Domyslam sie ze chodzi o coss zwiazanego z dynamiczna alokacja pamieci, nie potrafie tego naprawic.
